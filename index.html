@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17365D"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="PT Finance">
+<title>PT Finance</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#17202a;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:90px}.top{background:#17365D;color:white;padding:20px 18px 25px;border-radius:0 0 26px 26px}.top h1{margin:0;font-size:24px}.top p{margin:5px 0 0;font-size:12px;opacity:.82}.lang{float:left;border:0;border-radius:9px;padding:7px 10px;background:#ffffff22;color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}.card,.form,.item{background:#fff;border-radius:16px;box-shadow:0 3px 13px #0000000b}.card{padding:14px}.label{font-size:11px;color:#71808d}.value{font-size:20px;font-weight:800;margin-top:5px}.green{color:#2e7d32}.red{color:#c62828}.blue{color:#2467a5}.section{padding:0 14px}.section h2{font-size:17px;margin:10px 2px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:0;border-radius:13px;padding:13px 10px;font-weight:700;font-size:13px;background:white;box-shadow:0 3px 12px #0000000b}.primary{background:#2F75B5;color:white}.success{background:#70AD47;color:white}.dark{background:#17365D;color:white}.hidden{display:none}.form{margin:12px 14px;padding:15px}.form h2{margin-top:0;font-size:18px}label{display:block;font-size:11px;color:#687582;margin:9px 0 4px}input,select{width:100%;padding:11px;border:1px solid #d9e0e7;border-radius:10px;background:white;font-size:15px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.list{margin-bottom:12px}.item{margin:8px 0;padding:12px;display:flex;justify-content:space-between;gap:10px}.item small{display:block;color:#77838d;margin-top:3px}.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:white;border-top:1px solid #e1e5e9;display:flex;justify-content:space-around;padding:8px 3px calc(8px + env(safe-area-inset-bottom));z-index:5}.nav{border:0;background:none;color:#65717c;font-size:10px}.nav.active{color:#17365D;font-weight:800}.pill{display:inline-block;padding:4px 7px;border-radius:8px;background:#e8f1f8;font-size:10px}.danger{color:#c62828}.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#17365D;color:white;padding:10px 15px;border-radius:11px;display:none;z-index:20;font-size:12px}
+</style>
+</head>
+<body><div class="app">
+<header class="top"><button class="lang" onclick="toggleLang()">EN</button><h1>PT Finance</h1><p id="sub">إدارة التدريب والميزانية الشخصية — AED</p></header>
+
+<section id="home">
+<div class="grid">
+<div class="card"><div class="label" id="li">الدخل المحصل هذا الشهر</div><div class="value green" id="income">AED 0</div></div>
+<div class="card"><div class="label" id="le">إجمالي المصروفات</div><div class="value red" id="expenses">AED 0</div></div>
+<div class="card"><div class="label" id="lp">صافي التدفق</div><div class="value blue" id="profit">AED 0</div></div>
+<div class="card"><div class="label" id="lc">المبالغ المستحقة</div><div class="value" id="due">AED 0</div></div>
+</div>
+<div class="section"><h2 id="quick">إضافة سريعة</h2><div class="actions">
+<button class="btn primary" onclick="show('payment')">+ <span id="addPay">دفعة عميل</span></button>
+<button class="btn" onclick="show('expense')">+ <span id="addExp">مصروف</span></button>
+<button class="btn success" onclick="show('saving')">+ <span id="addSav">ادخار / استثمار</span></button>
+<button class="btn dark" onclick="show('clients')">🏋️ <span id="clientBtn">العملاء</span></button>
+</div></div>
+<div class="section"><h2 id="overview">نظرة سريعة</h2><div class="card" id="overviewBox"></div></div>
+</section>
+
+<section id="clients" class="hidden"><div class="section"><h2 id="ct">العملاء والباقات</h2><div id="clientList" class="list"></div><button class="btn primary" style="width:100%" onclick="show('newClient')" id="newClientBtn">+ إضافة عميل</button></div></section>
+
+<section id="newClient" class="hidden"><div class="form"><h2 id="nct">إضافة عميل</h2>
+<label id="nameL">اسم العميل</label><input id="cName">
+<label id="phoneL">ملاحظات/وسيلة تواصل (اختياري)</label><input id="cNote">
+<div class="row"><div><label id="pkgL">الباقة</label><select id="cPkg"><option>12 Sessions</option><option>16 Sessions</option><option>24 Sessions</option><option>Custom</option></select></div><div><label id="priceL">السعر AED</label><input id="cPrice" type="number"></div></div>
+<div class="row"><div><label id="usedL">الجلسات المستخدمة</label><input id="cUsed" type="number" value="0"></div><div><label id="startL">تاريخ البداية</label><input id="cStart" type="date"></div></div>
+<div class="actions"><button class="btn primary" onclick="saveClient()" id="saveClientBtn">حفظ</button><button class="btn" onclick="show('clients')" id="cancelClient">إلغاء</button></div>
+</div></section>
+
+<section id="payment" class="hidden"><div class="form"><h2 id="pt">تسجيل دفعة عميل</h2>
+<label>التاريخ</label><input id="pDate" type="date"><label id="pcL">العميل</label><select id="pClient"></select>
+<div class="row"><div><label id="paL">المبلغ AED</label><input id="pAmount" type="number"></div><div><label id="psL">عدد الجلسات المستخدمة</label><input id="pSessions" type="number" value="1"></div></div>
+<label id="pmL">طريقة الدفع</label><select id="pMethod"><option>Bank Transfer</option><option>Cash</option><option>Card</option><option>Online</option></select>
+<div class="actions"><button class="btn primary" onclick="savePayment()" id="savePay">حفظ</button><button class="btn" onclick="show('home')" id="cancelPay">إلغاء</button></div></div></section>
+
+<section id="expense" class="hidden"><div class="form"><h2 id="et">إضافة مصروف</h2>
+<label>التاريخ</label><input id="eDate" type="date"><label id="eaL">نوع المصروف</label><select id="eArea"><option>Business</option><option>Personal</option></select>
+<label id="ecL">الفئة</label><select id="eCat"><option>Rent</option><option>Utilities</option><option>Phone & Internet</option><option>Groceries</option><option>Restaurants</option><option>Fuel</option><option>Car</option><option>Insurance</option><option>Health</option><option>Training & Gym</option><option>Shopping</option><option>Entertainment</option><option>Travel</option><option>Family Support</option><option>Debt</option><option>Subscriptions</option><option>Equipment</option><option>Marketing</option><option>Professional Fees</option><option>Licenses</option><option>Transport</option><option>Other</option></select>
+<label id="edL">الوصف</label><input id="eDesc"><label id="eamL">المبلغ AED</label><input id="eAmount" type="number">
+<div class="actions"><button class="btn primary" onclick="saveExpense()">حفظ</button><button class="btn" onclick="show('home')">إلغاء</button></div></div></section>
+
+<section id="saving" class="hidden"><div class="form"><h2 id="st">ادخار / استثمار</h2><label>التاريخ</label><input id="sDate" type="date"><label id="sTypeL">النوع</label><select id="sType"><option>Savings</option><option>Investment</option><option>Emergency Fund</option></select><label id="sGoalL">الهدف</label><input id="sGoal"><label id="sAmtL">المبلغ AED</label><input id="sAmount" type="number"><div class="actions"><button class="btn success" onclick="saveSaving()">حفظ</button><button class="btn" onclick="show('home')">إلغاء</button></div></div></section>
+
+<section id="reports" class="hidden"><div class="section"><h2 id="rt">التقارير</h2><div class="card" id="report"></div><h2 id="bt">Business vs Personal</h2><div class="grid" style="padding:0"><div class="card"><div class="label">Business</div><div class="value" id="biz">AED 0</div></div><div class="card"><div class="label">Personal</div><div class="value" id="pers">AED 0</div></div></div></div></section>
+
+<section id="settings" class="hidden"><div class="form"><h2 id="sett">الخصوصية والإعدادات</h2><p id="privacy">هذا الإصدار لا يحتاج إلى حساب أو كلمة مرور أو أرقام بطاقات. البيانات تحفظ محليًا على الجهاز في Local Storage ولا تُرسل تلقائيًا إلى خادم.</p><button class="btn primary" onclick="backup()" id="backup">تصدير نسخة احتياطية</button><label id="importL">استيراد نسخة احتياطية</label><input type="file" id="importFile" accept=".json" onchange="restore(event)"><button class="btn" style="margin-top:10px" onclick="wipe()" id="wipe">حذف كل البيانات</button></div></section>
+
+<nav class="bottom"><button class="nav active" onclick="show('home')">⌂<br><span id="nHome">الرئيسية</span></button><button class="nav" onclick="show('clients')">🏋️<br><span id="nClients">العملاء</span></button><button class="nav" onclick="show('reports')">📊<br><span id="nReports">التقارير</span></button><button class="nav" onclick="show('settings')">⚙️<br><span id="nSettings">الإعدادات</span></button></nav>
+<div id="toast" class="toast"></div></div>
+
+<script>
+const KEY='pt_finance_private_v2';
+let d=JSON.parse(localStorage.getItem(KEY)||'{"clients":[],"payments":[],"expenses":[],"savings":[]}');
+let lang='ar', today=new Date().toISOString().slice(0,10);
+['cStart','pDate','eDate','sDate'].forEach(x=>document.getElementById(x).value=today);
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(d));render()}
+function money(n){return 'AED '+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2})}
+function month(x){let a=new Date(x),b=new Date();return a.getMonth()==b.getMonth()&&a.getFullYear()==b.getFullYear()}
+function show(id){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden'); if(id==='payment')fillClients(); if(id==='clients')renderClients(); window.scrollTo(0,0)}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',1600)}
+function render(){
+let inc=d.payments.filter(x=>month(x.date)).reduce((a,x)=>a+Number(x.amount),0);
+let exp=d.expenses.filter(x=>month(x.date)).reduce((a,x)=>a+Number(x.amount),0);
+let due=d.clients.reduce((a,x)=>a+Math.max(0,Number(x.price||0)-Number(x.paid||0)),0);
+$('income').textContent=money(inc);$('expenses').textContent=money(exp);$('profit').textContent=money(inc-exp);$('due').textContent=money(due);
+let active=d.clients.filter(x=>Number(x.total||0)-Number(x.used||0)>0).length;
+$('overviewBox').innerHTML=`${lang==='ar'?'العملاء النشطون':'Active clients'}: <b>${active}</b><br>${lang==='ar'?'إجمالي العملاء':'Total clients'}: <b>${d.clients.length}</b><br>${lang==='ar'?'إجمالي المبالغ المستحقة':'Outstanding package balance'}: <b>${money(due)}</b>`;
+renderClients();renderReport()
+}
+function renderClients(){
+let arr=d.clients;
+$('clientList').innerHTML=arr.length?arr.map((x,i)=>{let rem=Math.max(0,Number(x.total||0)-Number(x.used||0));return `<div class="item"><div><b>${x.name}</b><small>${x.package} • ${x.used||0}/${x.total||0} ${lang==='ar'?'جلسة مستخدمة':''}</small><small>${x.note||''}</small></div><div style="text-align:left"><b class="${rem<=2?'danger':'green'}">${rem}</b><small>${lang==='ar'?'متبقية':'remaining'}</small></div></div>`}).join(''):`<div class="card" style="text-align:center;padding:25px">${lang==='ar'?'لم تضف عملاء بعد':'No clients yet'}</div>`;
+}
+function fillClients(){$('pClient').innerHTML=d.clients.length?d.clients.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''):'<option value="">No clients</option>'}
+function saveClient(){let name=$('cName').value.trim();if(!name)return toast(lang==='ar'?'أدخل اسم العميل':'Enter client name');let pkg=$('cPkg').value,total=pkg.startsWith('12')?12:pkg.startsWith('16')?16:pkg.startsWith('24')?24:Number(prompt(lang==='ar'?'عدد الجلسات':'Number of sessions','12')||0);let x={id:Date.now().toString(),name,note:$('cNote').value,package:pkg,price:Number($('cPrice').value||0),total,used:Number($('cUsed').value||0),paid:0,start:$('cStart').value};d.clients.push(x);save();toast(lang==='ar'?'تمت إضافة العميل':'Client added');show('clients')}
+function savePayment(){let id=$('pClient').value;if(!id)return toast(lang==='ar'?'أضف عميلًا أولًا':'Add a client first');let amt=Number($('pAmount').value||0);if(!amt)return toast(lang==='ar'?'أدخل المبلغ':'Enter amount');let s=Number($('pSessions').value||0);d.payments.push({date:$('pDate').value,clientId:id,amount:amt,sessions:s,method:$('pMethod').value});let c=d.clients.find(x=>x.id===id);if(c){c.paid=Number(c.paid||0)+amt;c.used=Number(c.used||0)+s}save();toast(lang==='ar'?'تم حفظ الدفعة':'Payment saved');show('home')}
+function saveExpense(){let amt=Number($('eAmount').value||0);if(!amt)return toast(lang==='ar'?'أدخل المبلغ':'Enter amount');d.expenses.push({date:$('eDate').value,area:$('eArea').value,category:$('eCat').value,description:$('eDesc').value,amount:amt});save();toast(lang==='ar'?'تم حفظ المصروف':'Expense saved');show('home')}
+function saveSaving(){let amt=Number($('sAmount').value||0);if(!amt)return toast(lang==='ar'?'أدخل المبلغ':'Enter amount');d.savings.push({date:$('sDate').value,type:$('sType').value,goal:$('sGoal').value,amount:amt});save();toast(lang==='ar'?'تم الحفظ':'Saved');show('home')}
+function renderReport(){let inc=d.payments.filter(x=>month(x.date)).reduce((a,x)=>a+Number(x.amount),0),biz=d.expenses.filter(x=>month(x.date)&&x.area==='Business').reduce((a,x)=>a+Number(x.amount),0),per=d.expenses.filter(x=>month(x.date)&&x.area==='Personal').reduce((a,x)=>a+Number(x.amount),0),sav=d.savings.filter(x=>month(x.date)).reduce((a,x)=>a+Number(x.amount),0);$('biz').textContent=money(biz);$('pers').textContent=money(per);$('report').innerHTML=`${lang==='ar'?'الدخل المحصل':'Collected income'}: <b>${money(inc)}</b><br>${lang==='ar'?'مصاريف العمل':'Business expenses'}: <b>${money(biz)}</b><br>${lang==='ar'?'المصاريف الشخصية':'Personal expenses'}: <b>${money(per)}</b><br>${lang==='ar'?'الادخار/الاستثمار':'Savings/investments'}: <b>${money(sav)}</b><br>${lang==='ar'?'صافي التدفق':'Net cash flow'}: <b>${money(inc-biz-per)}</b>`}
+function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));a.download='PT-Finance-Backup.json';a.click()}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{d=JSON.parse(r.result);save();toast(lang==='ar'?'تم الاستيراد':'Imported')}catch{toast('Invalid backup')}};r.readAsText(f)}
+function wipe(){if(confirm(lang==='ar'?'حذف جميع البيانات؟':'Delete all data?')){d={clients:[],payments:[],expenses:[],savings:[]};save()}}
+function toggleLang(){lang=lang==='ar'?'en':'ar';document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';const ar={sub:'إدارة التدريب والميزانية الشخصية — AED',li:'الدخل المحصل هذا الشهر',le:'إجمالي المصروفات',lp:'صافي التدفق',quick:'إضافة سريعة',addPay:'دفعة عميل',addExp:'مصروف',addSav:'ادخار / استثمار',clientBtn:'العملاء',overview:'نظرة سريعة',ct:'العملاء والباقات',newClientBtn:'+ إضافة عميل',nct:'إضافة عميل',nameL:'اسم العميل',phoneL:'ملاحظات/وسيلة تواصل (اختياري)',pkgL:'الباقة',priceL:'السعر AED',usedL:'الجلسات المستخدمة',startL:'تاريخ البداية',saveClientBtn:'حفظ',cancelClient:'إلغاء',pt:'تسجيل دفعة عميل',pcL:'العميل',paL:'المبلغ AED',psL:'عدد الجلسات المستخدمة',pmL:'طريقة الدفع',savePay:'حفظ',cancelPay:'إلغاء',et:'إضافة مصروف',eaL:'نوع المصروف',ecL:'الفئة',edL:'الوصف',eamL:'المبلغ AED',st:'ادخار / استثمار',sTypeL:'النوع',sGoalL:'الهدف',sAmtL:'المبلغ AED',rt:'التقارير',bt:'Business vs Personal',sett:'الخصوصية والإعدادات',privacy:'هذا الإصدار لا يحتاج إلى حساب أو كلمة مرور أو أرقام بطاقات. البيانات تحفظ محليًا على الجهاز في Local Storage ولا تُرسل تلقائيًا إلى خادم.',backup:'تصدير نسخة احتياطية',importL:'استيراد نسخة احتياطية',wipe:'حذف كل البيانات',nHome:'الرئيسية',nClients:'العملاء',nReports:'التقارير',nSettings:'الإعدادات'};const en={sub:'Training & personal finance — AED',li:'Collected income this month',le:'Total expenses',lp:'Net cash flow',quick:'Quick Add',addPay:'Client payment',addExp:'Expense',addSav:'Savings / Investment',clientBtn:'Clients',overview:'Overview',ct:'Clients & packages',newClientBtn:'+ Add client',nct:'Add client',nameL:'Client name',phoneL:'Notes / contact (optional)',pkgL:'Package',priceL:'Price AED',usedL:'Sessions used',startL:'Start date',saveClientBtn:'Save',cancelClient:'Cancel',pt:'Record client payment',pcL:'Client',paL:'Amount AED',psL:'Sessions used',pmL:'Payment method',savePay:'Save',cancelPay:'Cancel',et:'Add expense',eaL:'Expense type',ecL:'Category',edL:'Description',eamL:'Amount AED',st:'Savings / investment',sTypeL:'Type',sGoalL:'Goal',sAmtL:'Amount AED',rt:'Reports',bt:'Business vs Personal',sett:'Privacy & settings',privacy:'This version requires no account, password or card numbers. Data is stored locally on this device using Local Storage and is not automatically sent to a server.',backup:'Export backup',importL:'Import backup',wipe:'Delete all data',nHome:'Home',nClients:'Clients',nReports:'Reports',nSettings:'Settings'};Object.entries(lang==='ar'?ar:en).forEach(([k,v])=>{if($(k))$(k).textContent=v});render()}
+render();
+</script></body></html>
